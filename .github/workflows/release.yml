@@ -31,4 +31,9 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+          # Tự động nạp chứng chỉ Base64 và mật khẩu từ GitHub Secrets để ký số cho file Windows (.exe)
+          WIN_CSC_LINK: ${{ secrets.WIN_CSC_LINK }}
+          WIN_CSC_KEY_PASSWORD: ${{ secrets.WIN_CSC_KEY_PASSWORD }}
+
         run: npx electron-builder --publish always

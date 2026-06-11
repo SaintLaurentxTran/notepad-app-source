@@ -1,0 +1,16 @@
+Nhắc lại 2 việc bạn cần làm trên máy để kích hoạt hệ thống này:
+Khi chạy Local (Máy của bạn): Không cần để file .pfx trong thư mục dự án nữa. Mỗi khi muốn build trên máy mình, bạn mở PowerShell tại thư mục dự án và gõ lệnh này trước khi chạy lệnh dist:
+
+PowerShell
+$env:WIN_CSC_LINK="C:\ChungChiDoAn.pfx"
+$env:WIN_CSC_KEY_PASSWORD="123456"
+npm run dist
+Khi chạy trên GitHub (CI/CD): Bạn chạy lệnh này ở PowerShell để lấy chuỗi mã hóa Base64 của file chứng chỉ:
+
+PowerShell
+[Convert]::ToBase64String([IO.File]::ReadAllBytes("C:\ChungChiDoAn.pfx")) | Out-File -FilePath "C:\cert_base64.txt"
+Mở file cert_base64.txt ra, sao chép toàn bộ nội dung chữ bên trong. Sau đó lên giao diện GitHub của Repository, truy cập Settings > Secrets and variables > Actions > New repository secret và tạo 2 secret:
+
+WIN_CSC_LINK: Dán toàn bộ nội dung chuỗi chữ vừa sao chép.
+
+WIN_CSC_KEY_PASSWORD: Điền mật khẩu chứng chỉ của bạn (123456).
