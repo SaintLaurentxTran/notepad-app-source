@@ -1,3 +1,17 @@
+tạo chứng chỉ tự cấp
+
+# 1. Tạo chứng chỉ trong hệ thống với thời hạn 5 năm (dùng -NotAfter)
+$cert = New-SelfSignedCertificate -Type CodeSigningCert -Subject "CN=Tran Quoc Thanh" -NotAfter (Get-Date).AddYears(5)
+
+# 2. Thiết lập mật khẩu cho file chứng chỉ (ở đây để tạm là 123456)
+$password = ConvertTo-SecureString "123456" -AsPlainText -Force
+
+# 3. Xuất chứng chỉ đó ra thành file .pfx lưu ở ổ C
+Export-PfxCertificate -Cert $cert -FilePath "C:\FakeCertificate.pfx" -Password $password
+
+
+
+
 Nhắc lại 2 việc bạn cần làm trên máy để kích hoạt hệ thống này:
 Khi chạy Local (Máy của bạn): Không cần để file .pfx trong thư mục dự án nữa. Mỗi khi muốn build trên máy mình, bạn mở PowerShell tại thư mục dự án và gõ lệnh này trước khi chạy lệnh dist:
 
@@ -8,9 +22,16 @@ npm run dist
 Khi chạy trên GitHub (CI/CD): Bạn chạy lệnh này ở PowerShell để lấy chuỗi mã hóa Base64 của file chứng chỉ:
 
 PowerShell
-[Convert]::ToBase64String([IO.File]::ReadAllBytes("C:\ChungChiDoAn.pfx")) | Out-File -FilePath "C:\cert_base64.txt"
+[Convert]::ToBase64String([IO.File]::ReadAllBytes("C:\FakeCertificate.pfx")) | Out-File -FilePath "C:\cert_base64.txt"
 Mở file cert_base64.txt ra, sao chép toàn bộ nội dung chữ bên trong. Sau đó lên giao diện GitHub của Repository, truy cập Settings > Secrets and variables > Actions > New repository secret và tạo 2 secret:
 
 WIN_CSC_LINK: Dán toàn bộ nội dung chuỗi chữ vừa sao chép.
 
 WIN_CSC_KEY_PASSWORD: Điền mật khẩu chứng chỉ của bạn (123456).
+
+
+
+1. Copy cả file chứng chỉ ChungChiDoAn.pfx sang máy tính đó.
+2. Nhấp đúp vào file .pfx đó $\rightarrow$ Chọn Local Machine $\rightarrow$ Bấm Next.
+3. Nhập mật khẩu chứng chỉ của bạn (123456) $\rightarrow$ Bấm Next.
+4. Đến bước chọn nơi lưu, bạn tích vào dòng Place all certificates in the following store $\rightarrow$ Bấm Browse $\rightarrow$ Chọn thư mục Trusted Root Certification 5.Authorities (Cơ quan chứng nhận gốc đáng tin cậy) $\rightarrow$ Bấm OK và Finish.
