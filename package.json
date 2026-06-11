@@ -34,8 +34,8 @@
     "publish": [
       {
         "provider": "github",
-        "owner": "SaintLaurentxTran",
-        "repo": "notepad-app",
+        "owner": "YOUR_GITHUB_USERNAME",
+        "repo": "YOUR_REPO_NAME",
 	"releaseType": "release"
       }
     ],
